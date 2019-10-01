@@ -41,13 +41,13 @@ public class OAuth2AuthenticationConfig {
 		_consumerSecret = consumerSecret;
 	}
 
-	@DisplayName("Consumer key")
+	@DisplayName("Consumer Key")
 	@Expression(ExpressionSupport.NOT_SUPPORTED)
 	@Parameter
 	@Placement(order = 1)
 	private String _consumerKey;
 
-	@DisplayName("Consumer secret")
+	@DisplayName("Consumer Secret")
 	@Expression(ExpressionSupport.NOT_SUPPORTED)
 	@Parameter
 	@Placement(order = 2)
