@@ -40,7 +40,7 @@ public enum LiferayError implements ErrorTypeDefinition<LiferayError> {
 		}
 
 		throw new IllegalArgumentException(
-			"No error defined for given _status: " + status);
+			"No error defined for status: " + status);
 	}
 
 	@Override
