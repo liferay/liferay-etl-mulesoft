@@ -32,9 +32,9 @@ public class LiferayProxyConfig {
 
 		if ((_proxyHost != null) && (_proxyPort != null)) {
 			proxyConfigBuilder.host(_proxyHost);
+			proxyConfigBuilder.password(_proxyPassword);
 			proxyConfigBuilder.port(_proxyPort);
 			proxyConfigBuilder.username(_proxyUsername);
-			proxyConfigBuilder.password(_proxyPassword);
 
 			return proxyConfigBuilder.build();
 		}
