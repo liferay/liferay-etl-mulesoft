@@ -126,7 +126,6 @@ public class JsonNodeReaderTest {
 		Assert.assertTrue(
 			jsonNodeReader.hasPath(
 				_jsonNode, "fieldName2>nestedFieldName1>nestedFieldNameWith/"));
-
 		Assert.assertFalse(
 			jsonNodeReader.hasPath(
 				_jsonNode, "fieldName1>nestedFieldName1>nestedFieldNameWith/"));
