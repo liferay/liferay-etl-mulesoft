@@ -226,9 +226,8 @@ public class MetadataTypeBuilderTest {
 
 	@Test
 	public void testBuildMetadataType_NestedArrayField() throws Exception {
-		MetadataType entityMetadataType =
-			_getEntityMetadataType(
-				"/entities/{id}", OASConstants.OPERATION_GET);
+		MetadataType entityMetadataType = _getEntityMetadataType(
+			"/entities/{id}", OASConstants.OPERATION_GET);
 
 		MetadataType nestedEntityArrayMetadataType = _getFieldMetadataType(
 			entityMetadataType, "nestedEntityArrayField");
@@ -249,9 +248,8 @@ public class MetadataTypeBuilderTest {
 
 	@Test
 	public void testBuildMetadataType_NestedEntityField() throws Exception {
-		MetadataType entityMetadataType =
-			_getEntityMetadataType(
-				"/entities/{id}", OASConstants.OPERATION_GET);
+		MetadataType entityMetadataType = _getEntityMetadataType(
+			"/entities/{id}", OASConstants.OPERATION_GET);
 
 		MetadataType nestedEntityMetadataType = _getFieldMetadataType(
 			entityMetadataType, "nestedEntityField");
@@ -279,9 +277,8 @@ public class MetadataTypeBuilderTest {
 
 	@Test
 	public void testBuildMetadataType_PageEntity() throws Exception {
-		MetadataType pageEntityMetadataType =
-			_getEntityMetadataType(
-				"/entities", OASConstants.OPERATION_GET);
+		MetadataType pageEntityMetadataType = _getEntityMetadataType(
+			"/entities", OASConstants.OPERATION_GET);
 
 		Assert.assertTrue(pageEntityMetadataType instanceof ObjectType);
 
@@ -304,9 +301,8 @@ public class MetadataTypeBuilderTest {
 
 	@Test
 	public void testBuildMetadataType_RequiredFields() throws Exception {
-		MetadataType entityMetadataType =
-			_getEntityMetadataType(
-				"/entities/{id}", OASConstants.OPERATION_GET);
+		MetadataType entityMetadataType = _getEntityMetadataType(
+			"/entities/{id}", OASConstants.OPERATION_GET);
 
 		DefaultObjectType defaultObjectType =
 			(DefaultObjectType)entityMetadataType;
@@ -325,9 +321,8 @@ public class MetadataTypeBuilderTest {
 
 	@Test
 	public void testBuildMetadataType_StringField() throws Exception {
-		MetadataType entityMetadataType =
-			_getEntityMetadataType(
-				"/entities/{id}", OASConstants.OPERATION_GET);
+		MetadataType entityMetadataType = _getEntityMetadataType(
+			"/entities/{id}", OASConstants.OPERATION_GET);
 
 		MetadataType fieldMetadataType = _getFieldMetadataType(
 			entityMetadataType, "stringField");
@@ -354,8 +349,16 @@ public class MetadataTypeBuilderTest {
 
 		setUp();
 
-		return _getEntityMetadataType(
-			endpoint, OASConstants.OPERATION_GET);
+		return _getEntityMetadataType(endpoint, OASConstants.OPERATION_GET);
+	}
+
+	private MetadataType _getEntityMetadataType(String path, String httpMethod)
+		throws Exception {
+
+		return _metadataTypeBuilder.buildMetadataType(
+			null, path, httpMethod,
+			OASConstants.
+				PATH_RESPONSES_DEFAULT_CONTENT_APPLICATION_JSON_SCHEMA_PATTERN);
 	}
 
 	private MetadataType _getFieldMetadataType(
@@ -380,16 +383,6 @@ public class MetadataTypeBuilderTest {
 		QName qName = objectKeyType.getName();
 
 		return qName.toString();
-	}
-
-	private MetadataType _getEntityMetadataType(
-			String path, String httpMethod)
-		throws Exception {
-
-		return _metadataTypeBuilder.buildMetadataType(
-			null, path, httpMethod,
-			OASConstants.
-				PATH_RESPONSES_DEFAULT_CONTENT_APPLICATION_JSON_SCHEMA_PATTERN);
 	}
 
 	private MetadataTypeBuilder _metadataTypeBuilder;
