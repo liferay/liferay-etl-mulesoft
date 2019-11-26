@@ -112,7 +112,7 @@ public class MetadataTypeBuilderTest {
 	@Test
 	public void testBuildMetadataType_BigDecimalField() throws Exception {
 		MetadataType fieldMetadataType = _getFieldMetadataType(
-			_getResponseDefaultContentApplicationJsonSchema(
+			_getEntityMetadataType(
 				"/entities/{id}", OASConstants.OPERATION_GET),
 			"bigDecimalField");
 
@@ -122,7 +122,7 @@ public class MetadataTypeBuilderTest {
 	@Test
 	public void testBuildMetadataType_BinaryField() throws Exception {
 		MetadataType fieldMetadataType = _getFieldMetadataType(
-			_getResponseDefaultContentApplicationJsonSchema(
+			_getEntityMetadataType(
 				"/entities/{id}", OASConstants.OPERATION_GET),
 			"binaryField");
 
@@ -132,7 +132,7 @@ public class MetadataTypeBuilderTest {
 	@Test
 	public void testBuildMetadataType_BooleanField() throws Exception {
 		MetadataType fieldMetadataType = _getFieldMetadataType(
-			_getResponseDefaultContentApplicationJsonSchema(
+			_getEntityMetadataType(
 				"/entities/{id}", OASConstants.OPERATION_GET),
 			"booleanField");
 
@@ -142,7 +142,7 @@ public class MetadataTypeBuilderTest {
 	@Test
 	public void testBuildMetadataType_ByteField() throws Exception {
 		MetadataType fieldMetadataType = _getFieldMetadataType(
-			_getResponseDefaultContentApplicationJsonSchema(
+			_getEntityMetadataType(
 				"/entities/{id}", OASConstants.OPERATION_GET),
 			"byteField");
 
@@ -152,7 +152,7 @@ public class MetadataTypeBuilderTest {
 	@Test
 	public void testBuildMetadataType_DateField() throws Exception {
 		MetadataType fieldMetadataType = _getFieldMetadataType(
-			_getResponseDefaultContentApplicationJsonSchema(
+			_getEntityMetadataType(
 				"/entities/{id}", OASConstants.OPERATION_GET),
 			"dateField");
 
@@ -162,7 +162,7 @@ public class MetadataTypeBuilderTest {
 	@Test
 	public void testBuildMetadataType_DateTimeField() throws Exception {
 		MetadataType fieldMetadataType = _getFieldMetadataType(
-			_getResponseDefaultContentApplicationJsonSchema(
+			_getEntityMetadataType(
 				"/entities/{id}", OASConstants.OPERATION_GET),
 			"dateTimeField");
 
@@ -172,7 +172,7 @@ public class MetadataTypeBuilderTest {
 	@Test
 	public void testBuildMetadataType_DictionaryField() throws Exception {
 		MetadataType fieldMetadataType = _getFieldMetadataType(
-			_getResponseDefaultContentApplicationJsonSchema(
+			_getEntityMetadataType(
 				"/entities/{id}", OASConstants.OPERATION_GET),
 			"dictionaryField");
 
@@ -187,7 +187,7 @@ public class MetadataTypeBuilderTest {
 	@Test
 	public void testBuildMetadataType_DoubleField() throws Exception {
 		MetadataType fieldMetadataType = _getFieldMetadataType(
-			_getResponseDefaultContentApplicationJsonSchema(
+			_getEntityMetadataType(
 				"/entities/{id}", OASConstants.OPERATION_GET),
 			"doubleField");
 
@@ -197,7 +197,7 @@ public class MetadataTypeBuilderTest {
 	@Test
 	public void testBuildMetadataType_FloatField() throws Exception {
 		MetadataType fieldMetadataType = _getFieldMetadataType(
-			_getResponseDefaultContentApplicationJsonSchema(
+			_getEntityMetadataType(
 				"/entities/{id}", OASConstants.OPERATION_GET),
 			"floatField");
 
@@ -207,7 +207,7 @@ public class MetadataTypeBuilderTest {
 	@Test
 	public void testBuildMetadataType_IntegerField() throws Exception {
 		MetadataType fieldMetadataType = _getFieldMetadataType(
-			_getResponseDefaultContentApplicationJsonSchema(
+			_getEntityMetadataType(
 				"/entities/{id}", OASConstants.OPERATION_GET),
 			"integerField");
 
@@ -217,7 +217,7 @@ public class MetadataTypeBuilderTest {
 	@Test
 	public void testBuildMetadataType_LongField() throws Exception {
 		MetadataType fieldMetadataType = _getFieldMetadataType(
-			_getResponseDefaultContentApplicationJsonSchema(
+			_getEntityMetadataType(
 				"/entities/{id}", OASConstants.OPERATION_GET),
 			"longField");
 
@@ -227,7 +227,7 @@ public class MetadataTypeBuilderTest {
 	@Test
 	public void testBuildMetadataType_NestedArrayField() throws Exception {
 		MetadataType entityMetadataType =
-			_getResponseDefaultContentApplicationJsonSchema(
+			_getEntityMetadataType(
 				"/entities/{id}", OASConstants.OPERATION_GET);
 
 		MetadataType nestedEntityArrayMetadataType = _getFieldMetadataType(
@@ -250,7 +250,7 @@ public class MetadataTypeBuilderTest {
 	@Test
 	public void testBuildMetadataType_NestedEntityField() throws Exception {
 		MetadataType entityMetadataType =
-			_getResponseDefaultContentApplicationJsonSchema(
+			_getEntityMetadataType(
 				"/entities/{id}", OASConstants.OPERATION_GET);
 
 		MetadataType nestedEntityMetadataType = _getFieldMetadataType(
@@ -280,7 +280,7 @@ public class MetadataTypeBuilderTest {
 	@Test
 	public void testBuildMetadataType_PageEntity() throws Exception {
 		MetadataType pageEntityMetadataType =
-			_getResponseDefaultContentApplicationJsonSchema(
+			_getEntityMetadataType(
 				"/entities", OASConstants.OPERATION_GET);
 
 		Assert.assertTrue(pageEntityMetadataType instanceof ObjectType);
@@ -305,7 +305,7 @@ public class MetadataTypeBuilderTest {
 	@Test
 	public void testBuildMetadataType_RequiredFields() throws Exception {
 		MetadataType entityMetadataType =
-			_getResponseDefaultContentApplicationJsonSchema(
+			_getEntityMetadataType(
 				"/entities/{id}", OASConstants.OPERATION_GET);
 
 		DefaultObjectType defaultObjectType =
@@ -326,7 +326,7 @@ public class MetadataTypeBuilderTest {
 	@Test
 	public void testBuildMetadataType_StringField() throws Exception {
 		MetadataType entityMetadataType =
-			_getResponseDefaultContentApplicationJsonSchema(
+			_getEntityMetadataType(
 				"/entities/{id}", OASConstants.OPERATION_GET);
 
 		MetadataType fieldMetadataType = _getFieldMetadataType(
@@ -354,7 +354,7 @@ public class MetadataTypeBuilderTest {
 
 		setUp();
 
-		return _getResponseDefaultContentApplicationJsonSchema(
+		return _getEntityMetadataType(
 			endpoint, OASConstants.OPERATION_GET);
 	}
 
@@ -382,7 +382,7 @@ public class MetadataTypeBuilderTest {
 		return qName.toString();
 	}
 
-	private MetadataType _getResponseDefaultContentApplicationJsonSchema(
+	private MetadataType _getEntityMetadataType(
 			String path, String httpMethod)
 		throws Exception {
 
