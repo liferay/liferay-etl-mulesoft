@@ -4,4 +4,4 @@ MuleSoft Certified Connectors are developed by MuleSoft's partners and developer
 
 By installing this connector, you consent to MuleSoft sharing your contact information with the developer of this connector so that you can receive more information about it directly from the developer.
 
-//TODO Your license terms
+// TODO Your license terms
