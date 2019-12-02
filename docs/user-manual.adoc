@@ -125,7 +125,7 @@ On the next picture, you can see SwaggerHub UI with the definition of
 method. On the right side you can see available path parameters, request body
 structure and all possible responses.
 +
-image::../images/swaggerhub-products-post.png[]
+image::../images/swaggerhub_products_post.png[]
 +
 The following picture shows that same endpoint being used with Liferay
 connector's Create operation in a flow that imports products from Salesforce
@@ -133,7 +133,7 @@ into Liferay Commerce. Once you select desired endpoint from the Endpoint
 dropdown list, the connector will dynamically generate related Metadata which
 can be seen in the bottom right corner.
 +
-image::../images/anypoint-studio-products-create.png[]
+image::../images/anypoint_studio_products_create.png[]
 +
 Next, we will define input parameters. Keep in mind input parameters are
 designed in a way to support all Liferay RESTful web services and don't have to
