@@ -12,6 +12,6 @@ http://www.mulesoft.org/schema/mule/liferay http://www.mulesoft.org/schema/mule/
 	</liferay:config>
 
 	<flow name="test-get-products-flow">
-		<liferay:get endpoint="/v1.0/products" config-ref="Liferay_Config"/>
+		<liferay:get endpoint="/v1.0/products" config-ref="Liferay_Config" />
 	</flow>
 </mule>
