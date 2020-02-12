@@ -215,7 +215,7 @@ public class LiferayOperations {
 	@Optional
 	@Parameter
 	@Placement(order = 2, tab = Placement.ADVANCED_TAB)
-	@Summary("Time unit to be used in the Timeout configurations")
+	@Summary("Time unit to be used in the timeout configurations")
 	private TimeUnit _connectionTimeoutTimeUnit;
 
 	private final LiferayResponseValidator _liferayResponseValidator =
