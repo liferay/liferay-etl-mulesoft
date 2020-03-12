@@ -123,7 +123,7 @@ public class MetadataTypeBuilder {
 		}
 		catch (IOException ioException) {
 			logger.error(
-				"Unable to read Open API document from Liferay Portal instance",
+				"Unable to read OpenAPI document from Liferay Portal instance",
 				ioException);
 
 			throw new MetadataResolvingException(
