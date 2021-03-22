@@ -52,19 +52,20 @@ public class MetadataTypeBuilder {
 
 	public MetadataType buildMetadataType(
 			MetadataContext metadataContext, String endpoint, String operation,
-			String referencePath)
+			String endpointReferencePath)
 		throws ConnectionException, MetadataResolvingException {
 
 		JsonNode oasJsonNode = getOASJsonNode(metadataContext);
 
-		JsonNode referenceJsonNode = fetchReferenceJsonNode(
-			oasJsonNode, endpoint, operation, referencePath);
+		JsonNode endpointReferenceJsonNode = fetchEndpointReferenceJsonNode(
+			oasJsonNode, endpoint, operation, endpointReferencePath);
 
-		if (referenceJsonNode.isNull()) {
+		if (endpointReferenceJsonNode.isNull()) {
 			return resolveAnyMetadataType(metadataContext);
 		}
 
-		String schemaName = getSchemaName(referenceJsonNode.textValue());
+		String schemaName = getSchemaName(
+			endpointReferenceJsonNode.textValue());
 
 		JsonNode schemaJsonNode = getSchemaJsonNode(oasJsonNode, schemaName);
 
@@ -163,7 +164,13 @@ public class MetadataTypeBuilder {
 		).build();
 	}
 
-	private JsonNode fetchReferenceJsonNode(
+	private JsonNode fetchComponentsReferenceJsonNode(
+		JsonNode propertyJsonNode) {
+
+		return propertyJsonNode.get(OASConstants.REF);
+	}
+
+	private JsonNode fetchEndpointReferenceJsonNode(
 		JsonNode openAPISpecJsonNode, String endpoint, String operation,
 		String referencePath) {
 
@@ -319,8 +326,8 @@ public class MetadataTypeBuilder {
 			).objectType();
 
 		String schemaName = getSchemaName(
-			propertyJsonNode.get(
-				OASConstants.REF
+			fetchComponentsReferenceJsonNode(
+				propertyJsonNode
 			).asText());
 
 		JsonNode nestedObjectSchemaJsonNode = getSchemaJsonNode(
