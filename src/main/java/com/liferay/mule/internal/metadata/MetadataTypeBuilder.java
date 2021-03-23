@@ -320,7 +320,7 @@ public class MetadataTypeBuilder {
 
 	private void resolveNestedObjectMetadataType(
 		ObjectFieldTypeBuilder objectFieldTypeBuilder, JsonNode oasJsonNode,
-		JsonNode propertyJsonNode, String currSchemaName) {
+		JsonNode propertyJsonNode, String currentSchemaName) {
 
 		ObjectTypeBuilder nestedObjectTypeBuilder =
 			objectFieldTypeBuilder.value(
@@ -331,7 +331,7 @@ public class MetadataTypeBuilder {
 				propertyJsonNode
 			).asText());
 
-		if (currSchemaName.equals(schemaName)) {
+		if (currentSchemaName.equals(schemaName)) {
 			nestedObjectTypeBuilder.label(schemaName);
 
 			return;
@@ -355,7 +355,7 @@ public class MetadataTypeBuilder {
 	private void resolveObjectMetadataType(
 		ObjectTypeBuilder objectTypeBuilder, JsonNode oasJsonNode,
 		JsonNode propertiesJsonNode, JsonNode requiredJsonNode,
-		String currSchemaName) {
+		String currentSchemaName) {
 
 		Iterator<Map.Entry<String, JsonNode>> propertiesIterator =
 			propertiesJsonNode.fields();
@@ -373,7 +373,7 @@ public class MetadataTypeBuilder {
 				requiredJsonNode);
 			setObjectFieldValue(
 				objectFieldTypeBuilder, propertyEntry, oasJsonNode,
-				currSchemaName);
+				currentSchemaName);
 		}
 	}
 
@@ -402,7 +402,7 @@ public class MetadataTypeBuilder {
 	private void setObjectFieldValue(
 		ObjectFieldTypeBuilder objectFieldTypeBuilder,
 		Map.Entry<String, JsonNode> propertyEntry, JsonNode oasJsonNode,
-		String currSchemaName) {
+		String currentSchemaName) {
 
 		JsonNode propertyJsonNode = propertyEntry.getValue();
 
@@ -411,7 +411,7 @@ public class MetadataTypeBuilder {
 		if (typeJsonNode == null) {
 			resolveNestedObjectMetadataType(
 				objectFieldTypeBuilder, oasJsonNode, propertyJsonNode,
-				currSchemaName);
+				currentSchemaName);
 
 			return;
 		}
