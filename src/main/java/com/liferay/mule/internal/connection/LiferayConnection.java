@@ -89,8 +89,8 @@ public final class LiferayConnection {
 
 		return _send(
 			HttpConstants.Method.DELETE, null, pathParams, queryParams,
-			endpoint, connectionTimeout,
-			oasURLParser.getServerBaseURL(jaxRSAppBase));
+			oasURLParser.getServerBaseURL(jaxRSAppBase), endpoint,
+			connectionTimeout);
 	}
 
 	public HttpResponse get(
@@ -111,8 +111,9 @@ public final class LiferayConnection {
 		throws ModuleException {
 
 		return _send(
-			HttpConstants.Method.GET, null, pathParams, queryParams, endpoint,
-			connectionTimeout, oasURLParser.getServerBaseURL(jaxRSAppBase));
+			HttpConstants.Method.GET, null, pathParams, queryParams,
+			oasURLParser.getServerBaseURL(jaxRSAppBase), endpoint,
+			connectionTimeout);
 	}
 
 	public HttpResponse getOpenAPISpecHttpResponse()
@@ -148,8 +149,8 @@ public final class LiferayConnection {
 
 		return _send(
 			HttpConstants.Method.PATCH, inputStream, pathParams, queryParams,
-			endpoint, connectionTimeout,
-			oasURLParser.getServerBaseURL(jaxRSAppBase));
+			oasURLParser.getServerBaseURL(jaxRSAppBase), endpoint,
+			connectionTimeout);
 	}
 
 	public HttpResponse post(
@@ -171,8 +172,8 @@ public final class LiferayConnection {
 
 		return _send(
 			HttpConstants.Method.POST, inputStream, pathParams, queryParams,
-			endpoint, connectionTimeout,
-			oasURLParser.getServerBaseURL(jaxRSAppBase));
+			oasURLParser.getServerBaseURL(jaxRSAppBase), endpoint,
+			connectionTimeout);
 	}
 
 	private LiferayConnection(
@@ -277,8 +278,8 @@ public final class LiferayConnection {
 	private HttpResponse _send(
 			HttpConstants.Method method, InputStream inputStream,
 			Map<String, String> pathParams,
-			MultiMap<String, String> queryParams, String endpoint,
-			long connectionTimeout, String basePath)
+			MultiMap<String, String> queryParams, String basePath,
+			String endpoint, long connectionTimeout)
 		throws ModuleException {
 
 		String uri = basePath + _resolvePathParams(endpoint, pathParams);
