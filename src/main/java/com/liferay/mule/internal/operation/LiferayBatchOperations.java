@@ -148,8 +148,9 @@ public class LiferayBatchOperations {
 		pathParams.put("exportTaskId", exportTaskId);
 
 		HttpResponse httpResponse = connection.get(
-			pathParams, new MultiMap<>(), _GET_EXPORT_TASK_CONTENT_ENDPOINT,
-			connectionTimeout, BATCH_JAX_RS_APP_BASE);
+			pathParams, new MultiMap<>(),
+			"/v1.0/export-task/{exportTaskId}/content", connectionTimeout,
+			"/headless-batch-engine");
 
 		liferayResponseValidator.validate(httpResponse);
 
@@ -167,8 +168,8 @@ public class LiferayBatchOperations {
 		pathParams.put("exportTaskId", exportTaskId);
 
 		HttpResponse httpResponse = connection.get(
-			pathParams, new MultiMap<>(), _GET_EXPORT_TASK_ENDPOINT,
-			connectionTimeout, BATCH_JAX_RS_APP_BASE);
+			pathParams, new MultiMap<>(), "/v1.0/export-task/{exportTaskId}",
+			connectionTimeout, "/headless-batch-engine");
 
 		liferayResponseValidator.validate(httpResponse);
 
@@ -202,8 +203,9 @@ public class LiferayBatchOperations {
 		}
 
 		HttpResponse httpResponse = connection.post(
-			null, pathParams, queryParams, _SUBMIT_EXPORT_TASK_ENDPOINT,
-			connectionTimeout, BATCH_JAX_RS_APP_BASE);
+			null, pathParams, queryParams,
+			"/v1.0/export-task/{className}/{contentType}", connectionTimeout,
+			"/headless-batch-engine");
 
 		JsonNode payloadJsonNode = jsonNodeReader.fromHttpResponse(
 			httpResponse);
@@ -212,18 +214,6 @@ public class LiferayBatchOperations {
 
 		return String.valueOf(idJsonNode.longValue());
 	}
-
-	private static final String _GET_EXPORT_TASK_CONTENT_ENDPOINT =
-		"/v1.0/export-task/{exportTaskId}/content";
-
-	private static final String _GET_EXPORT_TASK_ENDPOINT =
-		"/v1.0/export-task/{exportTaskId}";
-
-	private static final String _SUBMIT_EXPORT_TASK_ENDPOINT =
-		"/v1.0/export-task/{className}/{contentType}";
-
-	private static final String BATCH_JAX_RS_APP_BASE =
-		"/headless-batch-engine";
 
 	private final JsonNodeReader jsonNodeReader = new JsonNodeReader();
 	private final LiferayResponseValidator liferayResponseValidator =
