@@ -77,19 +77,20 @@ public final class LiferayConnection {
 
 		return delete(
 			oasURLParser.getJaxRSAppBase(), endpoint, pathParams, queryParams,
-			connectionTimeout);
+			"application/json", connectionTimeout);
 	}
 
 	public HttpResponse delete(
 			String jaxRSAppBase, String endpoint,
 			Map<String, String> pathParams,
-			MultiMap<String, String> queryParams, long connectionTimeout)
+			MultiMap<String, String> queryParams, String contentType,
+			long connectionTimeout)
 		throws ModuleException {
 
 		return send(
 			HttpConstants.Method.DELETE,
 			oasURLParser.getServerBaseURL(jaxRSAppBase), endpoint, null,
-			pathParams, queryParams, connectionTimeout);
+			pathParams, queryParams, contentType, connectionTimeout);
 	}
 
 	public HttpResponse get(
@@ -99,19 +100,20 @@ public final class LiferayConnection {
 
 		return get(
 			oasURLParser.getJaxRSAppBase(), endpoint, pathParams, queryParams,
-			connectionTimeout);
+			"application/json", connectionTimeout);
 	}
 
 	public HttpResponse get(
 			String jaxRSAppBase, String endpoint,
 			Map<String, String> pathParams,
-			MultiMap<String, String> queryParams, long connectionTimeout)
+			MultiMap<String, String> queryParams, String contentType,
+			long connectionTimeout)
 		throws ModuleException {
 
 		return send(
 			HttpConstants.Method.GET,
 			oasURLParser.getServerBaseURL(jaxRSAppBase), endpoint, null,
-			pathParams, queryParams, connectionTimeout);
+			pathParams, queryParams, contentType, connectionTimeout);
 	}
 
 	public HttpResponse getOpenAPISpecHttpResponse()
@@ -120,7 +122,7 @@ public final class LiferayConnection {
 		return httpClient.send(
 			getHttpRequest(
 				HttpConstants.Method.GET, openAPISpecPath, new MultiMap<>(),
-				null),
+				"application/json", null),
 			10000, true, null);
 	}
 
@@ -136,19 +138,20 @@ public final class LiferayConnection {
 
 		return patch(
 			oasURLParser.getJaxRSAppBase(), endpoint, inputStream, pathParams,
-			queryParams, connectionTimeout);
+			queryParams, "application/json", connectionTimeout);
 	}
 
 	public HttpResponse patch(
 			String jaxRSAppBase, String endpoint, InputStream inputStream,
 			Map<String, String> pathParams,
-			MultiMap<String, String> queryParams, long connectionTimeout)
+			MultiMap<String, String> queryParams, String contentType,
+			long connectionTimeout)
 		throws ModuleException {
 
 		return send(
 			HttpConstants.Method.PATCH,
 			oasURLParser.getServerBaseURL(jaxRSAppBase), endpoint, inputStream,
-			pathParams, queryParams, connectionTimeout);
+			pathParams, queryParams, contentType, connectionTimeout);
 	}
 
 	public HttpResponse post(
@@ -159,19 +162,20 @@ public final class LiferayConnection {
 
 		return post(
 			oasURLParser.getJaxRSAppBase(), endpoint, inputStream, pathParams,
-			queryParams, connectionTimeout);
+			queryParams, "application/json", connectionTimeout);
 	}
 
 	public HttpResponse post(
 			String jaxRSAppBase, String endpoint, InputStream inputStream,
 			Map<String, String> pathParams,
-			MultiMap<String, String> queryParams, long connectionTimeout)
+			MultiMap<String, String> queryParams, String contentType,
+			long connectionTimeout)
 		throws ModuleException {
 
 		return send(
 			HttpConstants.Method.POST,
 			oasURLParser.getServerBaseURL(jaxRSAppBase), endpoint, inputStream,
-			pathParams, queryParams, connectionTimeout);
+			pathParams, queryParams, contentType, connectionTimeout);
 	}
 
 	private LiferayConnection(
@@ -208,7 +212,8 @@ public final class LiferayConnection {
 
 	private HttpRequest getHttpRequest(
 			HttpConstants.Method method, String uri,
-			MultiMap<String, String> queryParams, InputStream inputStream)
+			MultiMap<String, String> queryParams, String contentType,
+			InputStream inputStream)
 		throws ModuleException {
 
 		HttpRequestBuilder httpRequestBuilder = HttpRequest.builder();
@@ -216,7 +221,7 @@ public final class LiferayConnection {
 		httpRequestBuilder.addHeader(
 			"Authorization", httpAuthentication.getAuthorizationHeader()
 		).addHeader(
-			"Content-Type", "application/json"
+			"Content-Type", contentType
 		).method(
 			method
 		).queryParams(
@@ -287,13 +292,14 @@ public final class LiferayConnection {
 	private HttpResponse send(
 			HttpConstants.Method method, String basePath, String endpoint,
 			InputStream inputStream, Map<String, String> pathParams,
-			MultiMap<String, String> queryParams, long connectionTimeout)
+			MultiMap<String, String> queryParams, String contentType,
+			long connectionTimeout)
 		throws ModuleException {
 
 		String uri = basePath + resolvePathParams(endpoint, pathParams);
 
 		HttpRequest httpRequest = getHttpRequest(
-			method, uri, queryParams, inputStream);
+			method, uri, queryParams, contentType, inputStream);
 
 		logHttpRequest(connectionTimeout, method, pathParams, queryParams, uri);
 

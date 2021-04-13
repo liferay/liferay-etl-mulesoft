@@ -150,7 +150,7 @@ public class LiferayBatchOperations {
 		HttpResponse httpResponse = connection.get(
 			"/headless-batch-engine",
 			"/v1.0/export-task/{exportTaskId}/content", pathParams,
-			new MultiMap<>(), connectionTimeout);
+			new MultiMap<>(), "application/json", connectionTimeout);
 
 		liferayResponseValidator.validate(httpResponse);
 
@@ -169,7 +169,8 @@ public class LiferayBatchOperations {
 
 		HttpResponse httpResponse = connection.get(
 			"/headless-batch-engine", "/v1.0/export-task/{exportTaskId}",
-			pathParams, new MultiMap<>(), connectionTimeout);
+			pathParams, new MultiMap<>(), "application/json",
+			connectionTimeout);
 
 		liferayResponseValidator.validate(httpResponse);
 
@@ -205,7 +206,7 @@ public class LiferayBatchOperations {
 		HttpResponse httpResponse = connection.post(
 			"/headless-batch-engine",
 			"/v1.0/export-task/{className}/{contentType}", null, pathParams,
-			queryParams, connectionTimeout);
+			queryParams, "application/json", connectionTimeout);
 
 		JsonNode payloadJsonNode = jsonNodeReader.fromHttpResponse(
 			httpResponse);
