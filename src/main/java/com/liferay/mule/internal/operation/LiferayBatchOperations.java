@@ -73,7 +73,6 @@ public class LiferayBatchOperations {
 	public void executeExportTask(
 			@Connection LiferayConnection connection,
 			@OfValues(ClassNameValueProvider.class) String className,
-			BatchExportContentType batchExportContentType,
 			@Path(type = PathModel.Type.DIRECTORY) String directoryPath,
 			@Optional String siteId,
 			@Optional @Summary("Comma-separated list") String fieldNames,
@@ -91,8 +90,7 @@ public class LiferayBatchOperations {
 			connectionTimeout);
 
 		String exportTaskId = submitExportTask(
-			batchExportContentType, className, connection, fieldNames, siteId,
-			connectionTimeoutMillis);
+			className, connection, fieldNames, siteId, connectionTimeoutMillis);
 
 		while (true) {
 			String exportTaskStatus = getExportTaskStatus(
@@ -184,14 +182,13 @@ public class LiferayBatchOperations {
 	}
 
 	private String submitExportTask(
-		BatchExportContentType batchExportContentType, String className,
-		LiferayConnection connection, String fieldNames, String siteId,
-		long connectionTimeout) {
+		String className, LiferayConnection connection, String fieldNames,
+		String siteId, long connectionTimeout) {
 
 		Map<String, String> pathParams = new HashMap<>();
 
 		pathParams.put("className", className);
-		pathParams.put("contentType", batchExportContentType.toString());
+		pathParams.put("contentType", BatchExportContentType.JSONL.toString());
 
 		MultiMap<String, String> queryParams = new MultiMap<>();
 
