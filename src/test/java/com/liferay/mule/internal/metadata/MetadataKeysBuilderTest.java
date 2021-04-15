@@ -19,7 +19,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.liferay.mule.internal.oas.constants.OASConstants;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import java.util.Set;
@@ -30,7 +29,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.mockito.Matchers;
+import org.mockito.Mockito;
+
+import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.api.metadata.MetadataKey;
+import org.mule.runtime.api.metadata.MetadataKeyBuilder;
+import org.mule.runtime.api.metadata.MetadataResolvingException;
 
 /**
  * @author Matija Petanjek
@@ -38,49 +43,80 @@ import org.mule.runtime.api.metadata.MetadataKey;
 public class MetadataKeysBuilderTest {
 
 	@Before
-	public void setUp() throws IOException {
+	public void setUp() throws Exception {
+		metadataKeysBuilder = Mockito.spy(MetadataKeysBuilder.class);
+
 		Class<?> clazz = getClass();
 
 		ClassLoader classLoader = clazz.getClassLoader();
 
 		InputStream inputStream = classLoader.getResourceAsStream(
-			"com/liferay/mule/internal/metadata/oas-fragment-metadata-keys." +
-				"json");
+			"com/liferay/mule/internal/metadata/openapi.json");
 
 		ObjectMapper objectMapper = new ObjectMapper();
 
 		openAPISpecJsonNode = objectMapper.readTree(inputStream);
+
+		Mockito.doReturn(
+			openAPISpecJsonNode
+		).when(
+			metadataKeysBuilder
+		).getOASJsonNode(
+			Matchers.anyObject()
+		);
 	}
 
 	@Test
-	public void testBuildDELETEEndpointMetadataKeys() {
-		MetadataKeysBuilder metadataKeysBuilder = new MetadataKeysBuilder();
+	public void testBuildClassNameMetadataKeys()
+		throws ConnectionException, MetadataResolvingException {
+
+		Set<MetadataKey> metadataKeys =
+			metadataKeysBuilder.buildClassNameMetadataKeys(null);
+
+		Assert.assertEquals(metadataKeys.toString(), 2, metadataKeys.size());
+
+		MetadataKey metadataKey = MetadataKeyBuilder.newKey(
+			"com.liferay.headless.v1_0.Entity"
+		).build();
+
+		Assert.assertTrue(metadataKeys.contains(metadataKey));
+
+		metadataKey = MetadataKeyBuilder.newKey(
+			"com.liferay.headless.v1_0.NestedEntity"
+		).build();
+
+		Assert.assertTrue(metadataKeys.contains(metadataKey));
+	}
+
+	@Test
+	public void testBuildDELETEEndpointMetadataKeys()
+		throws ConnectionException, MetadataResolvingException {
 
 		Set<String> metadataKeyIds = toMetadataKeyIdSet(
-			metadataKeysBuilder.getMetadataKeys(
-				openAPISpecJsonNode, OASConstants.OPERATION_DELETE));
+			metadataKeysBuilder.buildEndpointMetadataKeys(
+				null, OASConstants.OPERATION_DELETE));
 
 		Assert.assertTrue(
 			metadataKeyIds.contains("/endpoint/with/delete/and/get/operation"));
 	}
 
 	@Test
-	public void testBuildEmptyMetadataKeys() {
-		MetadataKeysBuilder metadataKeysBuilder = new MetadataKeysBuilder();
+	public void testBuildEmptyMetadataKeys()
+		throws ConnectionException, MetadataResolvingException {
 
-		Set<MetadataKey> metadataKeys = metadataKeysBuilder.getMetadataKeys(
-			openAPISpecJsonNode, OPERATION_HEAD);
+		Set<MetadataKey> metadataKeys =
+			metadataKeysBuilder.buildEndpointMetadataKeys(null, OPERATION_HEAD);
 
 		Assert.assertTrue(metadataKeys.isEmpty());
 	}
 
 	@Test
-	public void testBuildGETEndpointMetadataKeys() {
-		MetadataKeysBuilder metadataKeysBuilder = new MetadataKeysBuilder();
+	public void testBuildGETEndpointMetadataKeys()
+		throws ConnectionException, MetadataResolvingException {
 
 		Set<String> metadataKeyIds = toMetadataKeyIdSet(
-			metadataKeysBuilder.getMetadataKeys(
-				openAPISpecJsonNode, OASConstants.OPERATION_GET));
+			metadataKeysBuilder.buildEndpointMetadataKeys(
+				null, OASConstants.OPERATION_GET));
 
 		Assert.assertTrue(
 			metadataKeyIds.contains("/endpoint/with/delete/and/get/operation"));
@@ -91,24 +127,24 @@ public class MetadataKeysBuilderTest {
 	}
 
 	@Test
-	public void testBuildPATCHEndpointMetadataKeys() {
-		MetadataKeysBuilder metadataKeysBuilder = new MetadataKeysBuilder();
+	public void testBuildPATCHEndpointMetadataKeys()
+		throws ConnectionException, MetadataResolvingException {
 
 		Set<String> metadataKeyIds = toMetadataKeyIdSet(
-			metadataKeysBuilder.getMetadataKeys(
-				openAPISpecJsonNode, OASConstants.OPERATION_PATCH));
+			metadataKeysBuilder.buildEndpointMetadataKeys(
+				null, OASConstants.OPERATION_PATCH));
 
 		Assert.assertTrue(
 			metadataKeyIds.contains("/endpoint/with/get/and/patch/operation"));
 	}
 
 	@Test
-	public void testBuildPOSTEndpointMetadataKeys() {
-		MetadataKeysBuilder metadataKeysBuilder = new MetadataKeysBuilder();
+	public void testBuildPOSTEndpointMetadataKeys()
+		throws ConnectionException, MetadataResolvingException {
 
 		Set<String> metadataKeyIds = toMetadataKeyIdSet(
-			metadataKeysBuilder.getMetadataKeys(
-				openAPISpecJsonNode, OASConstants.OPERATION_POST));
+			metadataKeysBuilder.buildEndpointMetadataKeys(
+				null, OASConstants.OPERATION_POST));
 
 		Assert.assertTrue(
 			metadataKeyIds.contains("/endpoint/with/get/and/post/operation"));
@@ -126,6 +162,7 @@ public class MetadataKeysBuilderTest {
 
 	private static final String OPERATION_HEAD = "head";
 
+	private MetadataKeysBuilder metadataKeysBuilder;
 	private JsonNode openAPISpecJsonNode;
 
 }
