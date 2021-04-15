@@ -39,7 +39,7 @@ public class DeleteEndpointTypeKeysResolver implements TypeKeysResolver {
 	public Set<MetadataKey> getKeys(MetadataContext metadataContext)
 		throws ConnectionException, MetadataResolvingException {
 
-		return metadataKeysBuilder.buildMetadataKeys(
+		return metadataKeysBuilder.buildEndpointMetadataKeys(
 			metadataContext, OASConstants.OPERATION_DELETE);
 	}
 

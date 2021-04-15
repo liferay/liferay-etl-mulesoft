@@ -44,48 +44,48 @@ import org.slf4j.LoggerFactory;
  */
 public class MetadataKeysBuilder {
 
-	public Set<MetadataKey> buildMetadataKeys(
-			MetadataContext metadataContext, String operation)
+	public Set<MetadataKey> buildClassNameMetadataKeys(
+			MetadataContext metadataContext)
 		throws ConnectionException, MetadataResolvingException {
-
-		Optional<LiferayConnection> liferayConnectionOptional =
-			metadataContext.getConnection();
-
-		try {
-			LiferayConnection liferayConnection =
-				liferayConnectionOptional.get();
-
-			return getMetadataKeys(
-				jsonNodeReader.fromHttpResponse(
-					liferayConnection.getOpenAPISpecHttpResponse()),
-				operation);
-		}
-		catch (IOException ioException) {
-			logger.error(
-				"Unable to read OpenAPI document from Liferay Portal instance",
-				ioException);
-
-			throw new MetadataResolvingException(
-				ioException.getMessage(), FailureCode.NO_DYNAMIC_KEY_AVAILABLE,
-				ioException);
-		}
-		catch (TimeoutException timeoutException) {
-			logger.error(
-				"Unable to establish connection to Liferay Portal instance",
-				timeoutException);
-
-			throw new MetadataResolvingException(
-				timeoutException.getMessage(), FailureCode.CONNECTION_FAILURE,
-				timeoutException);
-		}
-	}
-
-	protected Set<MetadataKey> getMetadataKeys(
-		JsonNode openAPISpecJsonNode, String operation) {
 
 		Set<MetadataKey> metadataKeys = new HashSet<>();
 
-		JsonNode pathsJsonNode = openAPISpecJsonNode.get(OASConstants.PATHS);
+		JsonNode schemasJsonNode = jsonNodeReader.getDescendantJsonNode(
+			getOASJsonNode(metadataContext),
+			OASConstants.PATH_COMPONENTS_SCHEMAS);
+
+		Iterator<Map.Entry<String, JsonNode>> schemasIterator =
+			schemasJsonNode.fields();
+
+		while (schemasIterator.hasNext()) {
+			Map.Entry<String, JsonNode> schemaEntry = schemasIterator.next();
+
+			JsonNode schemaJsonNode = schemaEntry.getValue();
+
+			JsonNode classNameJsonNode = jsonNodeReader.fetchDescendantJsonNode(
+				schemaJsonNode,
+				OASConstants.PATH_PROPERTIES_X_CLASS_NAME_DEFAULT);
+
+			if (!classNameJsonNode.isNull()) {
+				MetadataKeyBuilder metadataKeyBuilder =
+					MetadataKeyBuilder.newKey(classNameJsonNode.asText());
+
+				metadataKeys.add(metadataKeyBuilder.build());
+			}
+		}
+
+		return metadataKeys;
+	}
+
+	public Set<MetadataKey> buildEndpointMetadataKeys(
+			MetadataContext metadataContext, String operation)
+		throws ConnectionException, MetadataResolvingException {
+
+		Set<MetadataKey> metadataKeys = new HashSet<>();
+
+		JsonNode oasJsonNode = getOASJsonNode(metadataContext);
+
+		JsonNode pathsJsonNode = oasJsonNode.get(OASConstants.PATHS);
 
 		Iterator<Map.Entry<String, JsonNode>> pathsIterator =
 			pathsJsonNode.fields();
@@ -106,6 +106,39 @@ public class MetadataKeysBuilder {
 		}
 
 		return metadataKeys;
+	}
+
+	protected JsonNode getOASJsonNode(MetadataContext metadataContext)
+		throws ConnectionException, MetadataResolvingException {
+
+		Optional<LiferayConnection> liferayConnectionOptional =
+			metadataContext.getConnection();
+
+		try {
+			LiferayConnection liferayConnection =
+				liferayConnectionOptional.get();
+
+			return jsonNodeReader.fromHttpResponse(
+				liferayConnection.getOpenAPISpecHttpResponse());
+		}
+		catch (IOException ioException) {
+			logger.error(
+				"Unable to read OpenAPI document from Liferay Portal instance",
+				ioException);
+
+			throw new MetadataResolvingException(
+				ioException.getMessage(), FailureCode.NO_DYNAMIC_KEY_AVAILABLE,
+				ioException);
+		}
+		catch (TimeoutException timeoutException) {
+			logger.error(
+				"Unable to establish connection to Liferay Portal instance",
+				timeoutException);
+
+			throw new MetadataResolvingException(
+				timeoutException.getMessage(), FailureCode.CONNECTION_FAILURE,
+				timeoutException);
+		}
 	}
 
 	private static final Logger logger = LoggerFactory.getLogger(

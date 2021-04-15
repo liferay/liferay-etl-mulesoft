@@ -15,6 +15,7 @@
 package com.liferay.mule.internal.metadata;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.NullNode;
 
 import com.liferay.mule.internal.connection.LiferayConnection;
 import com.liferay.mule.internal.oas.OASFormat;
@@ -52,6 +53,33 @@ import org.slf4j.LoggerFactory;
  */
 public class MetadataTypeBuilder {
 
+	public MetadataType buildBatchMetadataType(
+			MetadataContext metadataContext, String className)
+		throws ConnectionException, MetadataResolvingException {
+
+		JsonNode oasJsonNode = getOASJsonNode(metadataContext);
+
+		JsonNode schemaJsonNode = getSchemaJsonNodeByClassName(
+			jsonNodeReader.getDescendantJsonNode(
+				oasJsonNode, OASConstants.PATH_COMPONENTS_SCHEMAS),
+			className);
+
+		ObjectTypeBuilder objectTypeBuilder = getObjectTypeBuilder(
+			metadataContext, className);
+
+		resolveObjectMetadataType(
+			objectTypeBuilder, oasJsonNode,
+			schemaJsonNode.get(OASConstants.PROPERTIES),
+			fetchRequiredJsonNode(schemaJsonNode), className);
+
+		ArrayTypeBuilder arrayTypeBuilder = getArrayTypeBuilder(
+			metadataContext, className);
+
+		return arrayTypeBuilder.of(
+			objectTypeBuilder.build()
+		).build();
+	}
+
 	public MetadataType buildMetadataType(
 			MetadataContext metadataContext, String endpoint, String operation,
 			String endpointReferencePath)
@@ -69,7 +97,8 @@ public class MetadataTypeBuilder {
 		String schemaName = getSchemaName(
 			endpointReferenceJsonNode.textValue());
 
-		JsonNode schemaJsonNode = getSchemaJsonNode(oasJsonNode, schemaName);
+		JsonNode schemaJsonNode = getSchemaJsonNodeBySchemaName(
+			oasJsonNode, schemaName);
 
 		String schemaType = getSchemaType(schemaJsonNode);
 
@@ -254,7 +283,30 @@ public class MetadataTypeBuilder {
 		return baseTypeBuilder.build();
 	}
 
-	private JsonNode getSchemaJsonNode(
+	private JsonNode getSchemaJsonNodeByClassName(
+		JsonNode schemasJsonNode, String className) {
+
+		Iterator<Map.Entry<String, JsonNode>> schemasIterator =
+			schemasJsonNode.fields();
+
+		while (schemasIterator.hasNext()) {
+			Map.Entry<String, JsonNode> schemaEntry = schemasIterator.next();
+
+			JsonNode schemaJsonNode = schemaEntry.getValue();
+
+			JsonNode classNameJsonNode = jsonNodeReader.fetchDescendantJsonNode(
+				schemaJsonNode,
+				OASConstants.PATH_PROPERTIES_X_CLASS_NAME_DEFAULT);
+
+			if (className.equals(classNameJsonNode.textValue())) {
+				return schemaJsonNode;
+			}
+		}
+
+		return NullNode.getInstance();
+	}
+
+	private JsonNode getSchemaJsonNodeBySchemaName(
 		JsonNode openAPISpecJsonNode, String schemaName) {
 
 		String path = StringUtil.replace(
@@ -293,7 +345,8 @@ public class MetadataTypeBuilder {
 
 		String schemaName = getSchemaName(referenceJsonNode.textValue());
 
-		JsonNode schemaJsonNode = getSchemaJsonNode(oasJsonNode, schemaName);
+		JsonNode schemaJsonNode = getSchemaJsonNodeBySchemaName(
+			oasJsonNode, schemaName);
 
 		resolveObjectMetadataType(
 			objectTypeBuilder, oasJsonNode,
@@ -336,7 +389,7 @@ public class MetadataTypeBuilder {
 				propertyJsonNode
 			).asText());
 
-		JsonNode nestedObjectSchemaJsonNode = getSchemaJsonNode(
+		JsonNode nestedObjectSchemaJsonNode = getSchemaJsonNodeBySchemaName(
 			oasJsonNode, schemaName);
 
 		JsonNode nestedObjectPropertiesJsonNode =
