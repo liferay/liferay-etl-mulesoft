@@ -20,31 +20,29 @@ import com.liferay.mule.internal.connection.LiferayConnection;
 import com.liferay.mule.internal.error.LiferayError;
 import com.liferay.mule.internal.error.LiferayResponseValidator;
 import com.liferay.mule.internal.error.provider.LiferayResponseErrorProvider;
+import com.liferay.mule.internal.metadata.key.BatchExportTypeKeysResolver;
+import com.liferay.mule.internal.metadata.output.BatchExportOutputTypeResolver;
 import com.liferay.mule.internal.util.JsonNodeReader;
-import com.liferay.mule.internal.values.ClassNameValueProvider;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.mule.runtime.api.meta.model.display.PathModel;
 import org.mule.runtime.api.util.MultiMap;
 import org.mule.runtime.extension.api.annotation.error.Throws;
+import org.mule.runtime.extension.api.annotation.metadata.MetadataKeyId;
+import org.mule.runtime.extension.api.annotation.metadata.OutputResolver;
 import org.mule.runtime.extension.api.annotation.param.ConfigOverride;
 import org.mule.runtime.extension.api.annotation.param.Connection;
 import org.mule.runtime.extension.api.annotation.param.MediaType;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.display.DisplayName;
-import org.mule.runtime.extension.api.annotation.param.display.Path;
 import org.mule.runtime.extension.api.annotation.param.display.Placement;
 import org.mule.runtime.extension.api.annotation.param.display.Summary;
-import org.mule.runtime.extension.api.annotation.values.OfValues;
 import org.mule.runtime.extension.api.exception.ModuleException;
 import org.mule.runtime.extension.api.runtime.operation.Result;
 import org.mule.runtime.http.api.domain.entity.HttpEntity;
@@ -69,11 +67,11 @@ public class LiferayBatchOperations {
 	}
 
 	@DisplayName("Batch - Export records")
-	@MediaType(MediaType.APPLICATION_OCTET_STREAM)
-	public void executeExportTask(
+	@MediaType(MediaType.APPLICATION_JSON)
+	@OutputResolver(output = BatchExportOutputTypeResolver.class)
+	public Result<InputStream, Void> executeExportTask(
 			@Connection LiferayConnection connection,
-			@OfValues(ClassNameValueProvider.class) String className,
-			@Path(type = PathModel.Type.DIRECTORY) String directoryPath,
+			@MetadataKeyId(BatchExportTypeKeysResolver.class) String className,
 			@Optional String siteId,
 			@Optional @Summary("Comma-separated list") String fieldNames,
 			@ConfigOverride @DisplayName("Connection Timeout") @Optional
@@ -107,34 +105,15 @@ public class LiferayBatchOperations {
 			Thread.sleep(1000);
 		}
 
-		extractExportTaskContent(
+		return getExportTaskResult(
 			getExportTaskContentZipInputStream(
-				connection, exportTaskId, connectionTimeoutMillis),
-			directoryPath);
+				connection, exportTaskId, connectionTimeoutMillis));
 	}
 
 	@DisplayName("Batch - Import records - Update")
 	@MediaType(MediaType.APPLICATION_JSON)
 	public Result<String, Void> executeUpdateImportTask() {
 		return null;
-	}
-
-	private void extractExportTaskContent(
-			ZipInputStream zipInputStream, String directoryPath)
-		throws IOException {
-
-		ZipEntry zipEntry = zipInputStream.getNextEntry();
-
-		try (FileOutputStream fileOutputStream = new FileOutputStream(
-				directoryPath + File.separator + zipEntry.getName())) {
-
-			byte[] buffer = new byte[1024];
-			int length;
-
-			while ((length = zipInputStream.read(buffer)) > 0) {
-				fileOutputStream.write(buffer, 0, length);
-			}
-		}
 	}
 
 	private ZipInputStream getExportTaskContentZipInputStream(
@@ -155,6 +134,18 @@ public class LiferayBatchOperations {
 		HttpEntity httpEntity = httpResponse.getEntity();
 
 		return new ZipInputStream(httpEntity.getContent());
+	}
+
+	private Result<InputStream, Void> getExportTaskResult(
+			ZipInputStream zipInputStream)
+		throws IOException {
+
+		zipInputStream.getNextEntry();
+
+		return Result.<InputStream, Void>builder(
+		).output(
+			zipInputStream
+		).build();
 	}
 
 	private String getExportTaskStatus(
@@ -188,7 +179,7 @@ public class LiferayBatchOperations {
 		Map<String, String> pathParams = new HashMap<>();
 
 		pathParams.put("className", className);
-		pathParams.put("contentType", BatchExportContentType.JSONL.toString());
+		pathParams.put("contentType", BatchExportContentType.JSON.toString());
 
 		MultiMap<String, String> queryParams = new MultiMap<>();
 
