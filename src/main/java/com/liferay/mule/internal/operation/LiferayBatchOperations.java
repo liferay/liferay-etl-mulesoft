@@ -20,7 +20,7 @@ import com.liferay.mule.internal.connection.LiferayConnection;
 import com.liferay.mule.internal.error.LiferayError;
 import com.liferay.mule.internal.error.LiferayResponseValidator;
 import com.liferay.mule.internal.error.provider.LiferayResponseErrorProvider;
-import com.liferay.mule.internal.metadata.key.BatchExportTypeKeysResolver;
+import com.liferay.mule.internal.metadata.key.ClassNameTypeKeysResolver;
 import com.liferay.mule.internal.metadata.output.BatchExportOutputTypeResolver;
 import com.liferay.mule.internal.util.JsonNodeReader;
 
@@ -71,7 +71,7 @@ public class LiferayBatchOperations {
 	@OutputResolver(output = BatchExportOutputTypeResolver.class)
 	public Result<InputStream, Void> executeExportTask(
 			@Connection LiferayConnection connection,
-			@MetadataKeyId(BatchExportTypeKeysResolver.class) String className,
+			@MetadataKeyId(ClassNameTypeKeysResolver.class) String className,
 			@Optional String siteId,
 			@Optional @Summary("Comma-separated list") String fieldNames,
 			@ConfigOverride @DisplayName("Connection Timeout") @Optional

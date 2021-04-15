@@ -27,7 +27,7 @@ import org.mule.runtime.api.metadata.resolving.TypeKeysResolver;
 /**
  * @author Matija Petanjek
  */
-public class BatchExportTypeKeysResolver implements TypeKeysResolver {
+public class ClassNameTypeKeysResolver implements TypeKeysResolver {
 
 	@Override
 	public String getCategoryName() {
