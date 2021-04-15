@@ -54,13 +54,13 @@ public class MetadataKeysBuilder {
 			getOASJsonNode(metadataContext),
 			OASConstants.PATH_COMPONENTS_SCHEMAS);
 
-		Iterator<Map.Entry<String, JsonNode>> schemasIterator =
+		Iterator<Map.Entry<String, JsonNode>> iterator =
 			schemasJsonNode.fields();
 
-		while (schemasIterator.hasNext()) {
-			Map.Entry<String, JsonNode> schemaEntry = schemasIterator.next();
+		while (iterator.hasNext()) {
+			Map.Entry<String, JsonNode> entry = iterator.next();
 
-			JsonNode schemaJsonNode = schemaEntry.getValue();
+			JsonNode schemaJsonNode = entry.getValue();
 
 			JsonNode classNameJsonNode = jsonNodeReader.fetchDescendantJsonNode(
 				schemaJsonNode,
@@ -91,12 +91,12 @@ public class MetadataKeysBuilder {
 			pathsJsonNode.fields();
 
 		while (pathsIterator.hasNext()) {
-			Map.Entry<String, JsonNode> pathEntry = pathsIterator.next();
+			Map.Entry<String, JsonNode> entry = pathsIterator.next();
 
-			JsonNode pathJsonNode = pathEntry.getValue();
+			JsonNode pathJsonNode = entry.getValue();
 
 			if (pathJsonNode.has(operation)) {
-				String path = pathEntry.getKey();
+				String path = entry.getKey();
 
 				MetadataKeyBuilder metadataKeyBuilder =
 					MetadataKeyBuilder.newKey(path);
