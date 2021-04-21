@@ -229,11 +229,11 @@ public class LiferayBatchOperations {
 		LiferayConnection connection, String exportTaskId,
 		long connectionTimeout) {
 
+		ResourceContext.Builder builder = new ResourceContext.Builder();
+
 		Map<String, String> pathParams = new HashMap<>();
 
 		pathParams.put("exportTaskId", exportTaskId);
-
-		ResourceContext.Builder builder = new ResourceContext.Builder();
 
 		HttpResponse httpResponse = connection.get(
 			builder.connectionTimeout(
@@ -257,11 +257,11 @@ public class LiferayBatchOperations {
 		LiferayConnection connection, String exportTaskId,
 		long connectionTimeout) {
 
+		ResourceContext.Builder builder = new ResourceContext.Builder();
+
 		Map<String, String> pathParams = new HashMap<>();
 
 		pathParams.put("exportTaskId", exportTaskId);
-
-		ResourceContext.Builder builder = new ResourceContext.Builder();
 
 		HttpResponse httpResponse = connection.get(
 			builder.connectionTimeout(
@@ -295,11 +295,11 @@ public class LiferayBatchOperations {
 		LiferayConnection connection, String importTaskId,
 		long connectionTimeout) {
 
+		ResourceContext.Builder builder = new ResourceContext.Builder();
+
 		Map<String, String> pathParams = new HashMap<>();
 
 		pathParams.put("importTaskId", importTaskId);
-
-		ResourceContext.Builder builder = new ResourceContext.Builder();
 
 		HttpResponse httpResponse = connection.get(
 			builder.connectionTimeout(
@@ -321,6 +321,8 @@ public class LiferayBatchOperations {
 		String className, LiferayConnection connection, String fieldNames,
 		String siteId, long connectionTimeout) {
 
+		ResourceContext.Builder builder = new ResourceContext.Builder();
+
 		Map<String, String> pathParams = new HashMap<>();
 
 		pathParams.put("className", className);
@@ -335,8 +337,6 @@ public class LiferayBatchOperations {
 		if (siteId != null) {
 			queryParams.put("siteId", siteId);
 		}
-
-		ResourceContext.Builder builder = new ResourceContext.Builder();
 
 		HttpResponse httpResponse = connection.post(
 			builder.connectionTimeout(
@@ -363,6 +363,8 @@ public class LiferayBatchOperations {
 		LiferayConnection connection, InputStream inputStream, String className,
 		Map<String, String> fieldNameMappings, long connectionTimeout) {
 
+		ResourceContext.Builder builder = new ResourceContext.Builder();
+
 		Map<String, String> pathParams = new HashMap<>();
 
 		pathParams.put("className", className);
@@ -384,8 +386,6 @@ public class LiferayBatchOperations {
 					Collectors.joining(",")
 				));
 		}
-
-		ResourceContext.Builder builder = new ResourceContext.Builder();
 
 		HttpResponse httpResponse = connection.post(
 			builder.bytes(
@@ -416,11 +416,11 @@ public class LiferayBatchOperations {
 		LiferayConnection connection, InputStream inputStream, String className,
 		long connectionTimeout) {
 
+		ResourceContext.Builder builder = new ResourceContext.Builder();
+
 		Map<String, String> pathParams = new HashMap<>();
 
 		pathParams.put("className", className);
-
-		ResourceContext.Builder builder = new ResourceContext.Builder();
 
 		HttpResponse httpResponse = connection.delete(
 			builder.bytes(
@@ -449,11 +449,11 @@ public class LiferayBatchOperations {
 		LiferayConnection connection, InputStream inputStream, String className,
 		long connectionTimeout) {
 
+		ResourceContext.Builder builder = new ResourceContext.Builder();
+
 		Map<String, String> pathParams = new HashMap<>();
 
 		pathParams.put("className", className);
-
-		ResourceContext.Builder builder = new ResourceContext.Builder();
 
 		HttpResponse httpResponse = connection.put(
 			builder.bytes(
