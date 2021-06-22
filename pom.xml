@@ -197,9 +197,6 @@
 					</execution>
 				</executions>
 			</plugin>
-
-			<!-- Plugin included to add Integration Tests (IT) to the build lifecycle. -->
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
